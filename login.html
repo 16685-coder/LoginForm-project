@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Sign in | Northstar</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18233d;
+      --muted: #7e899f;
+      --line: #e7eaf1;
+      --accent: #5a63e8;
+      --accent-dark: #464ed1;
+      --surface: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 9% 5%, rgba(215, 221, 255, .62), transparent 34%),
+        radial-gradient(ellipse at 100% 100%, rgba(226, 241, 255, .7), transparent 34%),
+        #f5f7fb;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+
+    .shell {
+      width: min(100%, 1050px);
+      min-height: 650px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid rgba(226, 230, 240, .8);
+      border-radius: 24px;
+      box-shadow: 0 28px 80px rgba(36, 48, 92, .12), 0 3px 12px rgba(36, 48, 92, .04);
+    }
+
+    .welcome {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 650px;
+      padding: 44px 48px;
+      overflow: hidden;
+      color: white;
+      background: linear-gradient(145deg, #4d56d8 0%, #6869e8 48%, #8880ef 100%);
+    }
+
+    .welcome::before, .welcome::after {
+      position: absolute;
+      z-index: -1;
+      content: "";
+      border: 1px solid rgba(255, 255, 255, .13);
+      border-radius: 50%;
+    }
+
+    .welcome::before {
+      width: 540px;
+      height: 540px;
+      right: -265px;
+      top: 70px;
+      box-shadow: 0 0 0 44px rgba(255, 255, 255, .035), 0 0 0 88px rgba(255, 255, 255, .025);
+    }
+
+    .welcome::after {
+      width: 290px;
+      height: 290px;
+      left: -160px;
+      bottom: -140px;
+      background: rgba(255, 255, 255, .045);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      width: fit-content;
+      color: inherit;
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -.4px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .35);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, .15);
+    }
+
+    .brand-mark svg { width: 19px; height: 19px; }
+
+    .welcome-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 390px;
+      margin: 58px 0 74px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, .82);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 17px;
+      height: 2px;
+      content: "";
+      background: #b8f1de;
+      border-radius: 2px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 4vw, 49px);
+      font-weight: 650;
+      letter-spacing: -2.2px;
+      line-height: 1.08;
+    }
+
+    .welcome-copy p {
+      max-width: 340px;
+      margin: 19px 0 0;
+      color: rgba(255, 255, 255, .77);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .quote {
+      position: relative;
+      z-index: 1;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, .2);
+      color: rgba(255, 255, 255, .86);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .quote strong {
+      display: block;
+      margin-top: 9px;
+      color: white;
+      font-size: 12px;
+    }
+
+    .form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 56px clamp(34px, 5vw, 70px);
+    }
+
+    .form-content { width: 100%; max-width: 365px; }
+
+    .mobile-brand { display: none; }
+
+    .form-heading { margin-bottom: 32px; }
+
+    h2 {
+      margin: 0 0 9px;
+      font-size: 29px;
+      font-weight: 700;
+      letter-spacing: -1.1px;
+    }
+
+    .form-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: #303b53;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap input {
+      width: 100%;
+      height: 49px;
+      padding: 0 15px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+      background: #fff;
+      font-size: 13px;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .input-wrap input::placeholder { color: #a6afbf; }
+
+    .input-wrap input:focus {
+      border-color: #777ef0;
+      box-shadow: 0 0 0 3px rgba(90, 99, 232, .12);
+    }
+
+    .password-input { padding-right: 67px !important; }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      padding: 5px;
+      transform: translateY(-50%);
+      color: #777f91;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 650;
+    }
+
+    .toggle-password:hover { color: var(--accent); }
+    .toggle-password:focus-visible, a:focus-visible, button:focus-visible {
+      outline: 3px solid rgba(90, 99, 232, .3);
+      outline-offset: 3px;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 0 25px;
+      font-size: 12px;
+    }
+
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #657087;
+      cursor: pointer;
+    }
+
+    .remember input {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    a {
+      color: var(--accent);
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    a:hover { color: var(--accent-dark); text-decoration: underline; }
+
+    .submit-button {
+      width: 100%;
+      height: 49px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: white;
+      border: 0;
+      border-radius: 9px;
+      background: linear-gradient(100deg, #5962e4, #6d6ae9);
+      box-shadow: 0 7px 15px rgba(86, 95, 223, .2);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .submit-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(86, 95, 223, .27);
+    }
+
+    .submit-button:active { transform: translateY(0); }
+    .submit-button svg { width: 16px; height: 16px; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 24px 0;
+      color: #a0a8b8;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .65px;
+      text-transform: uppercase;
+    }
+
+    .divider::before, .divider::after {
+      height: 1px;
+      flex: 1;
+      content: "";
+      background: var(--line);
+    }
+
+    .google-button {
+      width: 100%;
+      height: 47px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #39445b;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: white;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+      transition: background .18s ease, border-color .18s ease;
+    }
+
+    .google-button:hover { background: #fafbfe; border-color: #cbd1df; }
+    .google-button svg { width: 17px; height: 17px; }
+
+    .signup {
+      margin: 28px 0 0;
+      color: #7e899f;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .notice {
+      display: none;
+      margin-top: 16px;
+      padding: 11px 12px;
+      color: #4653ae;
+      border: 1px solid #dfe3ff;
+      border-radius: 8px;
+      background: #f5f6ff;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .notice.visible { display: block; }
+
+    @media (max-width: 760px) {
+      body { padding: 20px; }
+      .shell { max-width: 470px; min-height: auto; grid-template-columns: 1fr; }
+      .welcome { display: none; }
+      .form-panel { padding: 38px clamp(24px, 8vw, 48px); }
+      .mobile-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 34px;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 750;
+        text-decoration: none;
+      }
+      .mobile-brand .brand-mark {
+        color: white;
+        border: 0;
+        background: linear-gradient(145deg, #5962e4, #8278ed);
+      }
+    }
+
+    @media (max-width: 390px) {
+      body { padding: 12px; }
+      .form-panel { padding: 28px 22px; }
+      .options { font-size: 11px; }
+      h2 { font-size: 26px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <aside class="welcome" aria-label="Welcome">
+      <a class="brand" href="#" aria-label="Northstar home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="m12 2.8 2.5 6.7 6.7 2.5-6.7 2.5-2.5 6.7-2.5-6.7-6.7-2.5 6.7-2.5L12 2.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        northstar
+      </a>
+
+      <div class="welcome-copy">
+        <div class="eyebrow">A clearer way forward</div>
+        <h1>Your next<br>big thing<br>starts here.</h1>
+        <p>Bring your ideas, people, and plans together in one calm, focused workspace.</p>
+      </div>
+
+      <div class="quote">
+        “Everything finally feels like it’s moving in the same direction.”
+        <strong>Jamie Lee · Product lead</strong>
+      </div>
+    </aside>
+
+    <section class="form-panel" aria-labelledby="form-title">
+      <div class="form-content">
+        <a class="mobile-brand" href="#" aria-label="Northstar home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="m12 2.8 2.5 6.7 6.7 2.5-6.7 2.5-2.5 6.7-2.5-6.7-6.7-2.5 6.7-2.5L12 2.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="2" fill="currentColor"/>
+            </svg>
+          </span>
+          northstar
+        </a>
+
+        <header class="form-heading">
+          <h2 id="form-title">Welcome back</h2>
+          <p>Enter your details to sign in to your account.</p>
+        </header>
+
+        <form id="login-form">
+          <div class="field">
+            <label for="email">Email address</label>
+            <div class="input-wrap">
+              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <input class="password-input" id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+              <button class="toggle-password" id="toggle-password" type="button" aria-controls="password" aria-pressed="false">Show</button>
+            </div>
+          </div>
+
+          <div class="options">
+            <label class="remember" for="remember">
+              <input id="remember" name="remember" type="checkbox">
+              <span>Remember me</span>
+            </label>
+            <a href="#" id="forgot-link">Forgot password?</a>
+          </div>
+
+          <button class="submit-button" type="submit">
+            Sign in
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="divider">or continue with</div>
+
+          <button class="google-button" id="google-button" type="button">
+            <svg viewBox="0 0 18 18" aria-hidden="true">
+              <path fill="#4285F4" d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.797 2.716v2.258h2.908c1.702-1.567 2.685-3.875 2.685-6.614Z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.181l-2.908-2.258c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.582-5.038-3.71H.956v2.332A9 9 0 0 0 9 18Z"/>
+              <path fill="#FBBC05" d="M3.962 10.711a5.41 5.41 0 0 1 0-3.422V4.957H.956a9 9 0 0 0 0 8.086l3.006-2.332Z"/>
+              <path fill="#EA4335" d="M9 3.579c1.322 0 2.508.454 3.442 1.346l2.582-2.582C13.463.892 11.426 0 9 0a9 9 0 0 0-8.044 4.957l3.006 2.332C4.672 5.161 6.656 3.579 9 3.579Z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <p class="signup">New to Northstar? <a href="#" id="signup-link">Create an account</a></p>
+          <div class="notice" id="notice" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const passwordInput = document.querySelector("#password");
+    const togglePassword = document.querySelector("#toggle-password");
+    const notice = document.querySelector("#notice");
+
+    togglePassword.addEventListener("click", () => {
+      const isVisible = passwordInput.type === "text";
+      passwordInput.type = isVisible ? "password" : "text";
+      togglePassword.textContent = isVisible ? "Show" : "Hide";
+      togglePassword.setAttribute("aria-pressed", String(!isVisible));
+    });
+
+    document.querySelector("#login-form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      notice.textContent = "Your details look good. Connect this form to your sign-in service to continue.";
+      notice.classList.add("visible");
+    });
+
+    document.querySelector("#forgot-link").addEventListener("click", (event) => {
+      event.preventDefault();
+      notice.textContent = "Password recovery isn’t connected yet. Add your recovery flow to continue.";
+      notice.classList.add("visible");
+    });
+
+    document.querySelector("#google-button").addEventListener("click", () => {
+      notice.textContent = "Google sign-in isn’t connected yet. Add your authentication provider to continue.";
+      notice.classList.add("visible");
+    });
+
+    document.querySelector("#signup-link").addEventListener("click", (event) => {
+      event.preventDefault();
+      notice.textContent = "Account creation isn’t connected yet. Add your registration flow to continue.";
+      notice.classList.add("visible");
+    });
+  </script>
+</body>
+</html>
